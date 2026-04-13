@@ -1,0 +1,6 @@
+path: C:/Users/sense/Documents/full stack 1Model/data.yaml
+train: C:/Users/sense/Documents/full stack 1/Model/train
+val: C:/Users/sense/Documents/full stack 1/Model/val
+
+names:
+    0: 'driveway'

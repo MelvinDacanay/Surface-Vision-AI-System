@@ -1,0 +1,12 @@
+uvicorn
+fastapi
+react
+sqlalchemy
+opencv-python
+ultralytics
+python-multipart
+pandas
+scikit-learn
+seaborn
+numpy
+matplotlib
