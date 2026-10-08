@@ -1,303 +1,83 @@
-# AI-Powered Pressure Washing Job Predictor
+# Surface Vision AI
 
-> **Applied Data Science | Python | Regression | Statistical Modeling | Business Analytics**
+> **Computer Vision | Full-Stack AI Application | Python | YOLOv8 | FastAPI | React | SQLAlchemy**
 
 ## Project Summary
 
-While running a residential pressure-washing business, I found that estimating job duration, pricing, and profitability largely depended on intuition. This made scheduling difficult and made it harder to determine whether potential jobs were worth accepting.
+While working in the pressure-washing industry, I found that estimating and documenting the amount of cleanable surface at a job site could be time-consuming and subjective when done manually.
 
-I wanted to turn my historical job data into a decision-support tool that could estimate **how long a job would take, what I could reasonably quote, what it would cost, and how profitable it could be**.
+I wanted to build a computer vision application that could automatically identify concrete surfaces in job-site photos and provide a foundation for eventually estimating surface area and automating parts of the quoting process.
 
+I built a full-stack computer vision application using **YOLOv8 segmentation**, a **FastAPI backend**, a **React frontend**, and **SQLite/SQLAlchemy** for data logging.
 
-I collected and analyzed historical operating data and built regression models in Python using **NumPy, Pandas, SciPy, and Scikit-learn**. I evaluated the models using **10-fold cross-validation and R²**, implemented statistical confidence intervals, and built custom Python classes to organize the prediction and financial calculations.
+Users can upload job-site images, run them through the segmentation model, adjust the model's confidence threshold interactively, and view the processed output through the web interface.
 
-The final job-duration model achieved an **R² of 0.880**, meaning it explained approximately **88% of the variance** in the observed job-duration data during evaluation.
+I also implemented backend image processing, database logging, frontend/backend communication, and cache-busting logic to ensure users see the most recent processed image.
 
-The program can take an estimated driveway capacity and produce:
+The result is an end-to-end AI application that takes an image from upload through model inference, stores information about the processing event, and returns a visual segmentation result to the user.
 
-* A predicted job-duration range
-* A quote range
-* Estimated operating expenses
-* Estimated net profit
-
-This turned a subjective estimating process into a **data-driven decision-support tool** that can be expanded as more business data is collected.
+The application establishes the foundation for automatically estimating **concrete surface area**, which could eventually be used to improve pressure-washing quotes and job planning.
 
 ---
 
 # 1. Project Overview
 
-The predictor uses the estimated number of cars that can fit on a driveway as a primary input to estimate:
+Surface Vision AI is a specialized computer vision application for the **pressure-washing and concrete-sealing industry**.
 
-* Job duration
-* Quote range
-* Operating expenses
-* Potential net profit
+The application allows users to upload photographs of job sites and uses a **YOLOv8 segmentation model** to identify and isolate concrete surfaces.
 
-The model is based on historical data collected from my own pressure-washing operations.
+The system combines machine learning with a web application so that the model can be used through an interactive interface rather than as an isolated Python script.
 
-The project combines **statistical modeling with business decision-making**, using model predictions as inputs to financial calculations.
-
----
-
-# 2. Business Applications
-
-## Job Duration
-
-Estimating job duration can help:
-
-* Improve scheduling
-* Estimate how many jobs can fit into a workday
-* Set realistic customer expectations
-* Reduce reliance on intuition when estimating completion times
-
-## Job Quotes
-
-The model provides a general quote range based on historical accepted quotes.
-
-This can help determine whether a potential job is financially worthwhile rather than simply estimating what to charge.
-
-## Expense Prediction
-
-The expense model estimates variable job costs such as:
-
-* Bleach/chemical costs
-* Fuel
-* Other consumable supplies
-
-## Net Profit
-
-Estimated profit is calculated using:
-
-**Net Profit = Estimated Revenue − Estimated Expenses**
-
-This provides another metric for evaluating potential jobs.
-
----
-
-# 3. Technical Approach
-
-## Regression Modeling
-
-I analyzed the relationships between driveway size and the target variables.
-
-Because the variables showed relatively strong positive relationships, I experimented with:
-
-* Simple linear regression
-* Multiple linear regression
-
-The models were implemented in Python and evaluated using statistical and machine-learning techniques.
-
----
-
-## Job Duration Model
-
-The primary objective was to estimate job duration based on driveway size.
-
-The basic regression model follows:
-
-**y = β₀ + β₁x**
-
-Where:
-
-* `x` = estimated driveway capacity
-* `y` = estimated job duration
-* `β₀` = intercept
-* `β₁` = regression coefficient
-
-The regression parameters are used to calculate the expected duration for a given driveway size.
-
----
-
-## Statistical Intervals
-
-Rather than returning only a point estimate, the program calculates an interval around the estimate.
-
-The calculations incorporate:
-
-* Mean squared error
-* Predictor variance
-* Mean predictor value
-* Number of observations
-* Regression coefficients
-* Student's t-distribution
-
-These calculations are used to generate a **95% confidence interval** around the regression estimate.
-
-For the multiple-regression model, I also used matrix-based calculations to determine the standard error associated with the regression estimates.
-
-> A 95% confidence interval represents statistical uncertainty under the assumptions of the model. It should not be interpreted as 95% prediction accuracy.
-
----
-
-# 4. Model Evaluation
-
-The regression models were evaluated using **10-fold cross-validation** and **R² (coefficient of determination)**.
-
-### Job Duration Model
-
-| Version                     |        R² |
-| --------------------------- | --------: |
-| Initial regression pipeline |     0.757 |
-| Revised regression pipeline | **0.880** |
-
-The final model's R² of **0.880** indicates that approximately 88% of the variance in the observed job-duration data was explained by the model during evaluation.
-
-The improvement came after reviewing the underlying Excel data for inconsistencies and refining the modeling pipeline.
-
-### Expense Model
-
-The expense model uses multiple-output regression and was also evaluated using 10-fold cross-validation and R².
-
-During testing, the predicted expenses were generally within approximately a few dollars of the observed values.
-
-Because these expense estimates feed into the profitability calculation, improving this model is important for improving the reliability of the final financial estimates.
-
----
-
-# 5. Example
-
-### Input
+### Core Workflow
 
 ```text
-How many cars can fit on the driveway: 20
+User
+  ↓
+React Frontend
+  ↓
+Image Upload
+  ↓
+FastAPI Backend
+  ↓
+YOLOv8 Segmentation
+  ↓
+Processed Image
+  ↓
+Database Logging
+  ↓
+React Frontend
+  ↓
+Visual Result
 ```
-
-### Job Duration
-
-```text
-Lower estimate: 2 hours 51 minutes
-Upper estimate: 3 hours 8 minutes
-```
-
-### Quote
-
-```text
-Low bid:  $333.47
-High bid: $408.21
-```
-
-### Estimated Expenses
-
-```text
-Bleach: $11–$18
-Gas:    ~$6
-```
-
-### Estimated Net Profit
-
-```text
-Worst-case: $309.47
-Best-case:  $391.21
-```
-
-These values are model-derived estimates and are not guaranteed outcomes.
 
 ---
 
-# 6. How to Use
+# 2. Key Features
 
-1. Estimate how many cars could fit on the driveway.
-2. Enter the estimated driveway capacity.
-3. The program calculates:
+## Image Upload & Processing
 
-   * Estimated job duration
-   * Quote range
-   * Estimated operating expenses
-   * Estimated net profit
+The FastAPI backend accepts multipart image uploads and stores the images locally for model inference.
 
-For example, many residential driveways may accommodate approximately 4–6 vehicles, although actual driveway size varies significantly between properties.
+The backend then passes the image through the YOLOv8 segmentation model and returns the processed result.
 
 ---
 
-# 7. Technologies
+## Interactive Confidence Thresholding
 
-* **Python**
-* **NumPy**
-* **Pandas**
-* **SciPy**
-* **Scikit-learn**
-* **Linear Regression**
-* **Multiple Linear Regression**
-* **10-fold Cross-Validation**
-* **Statistical Inference**
-* **Matrix-based calculations**
-* **Custom Python Classes**
+The React frontend provides a slider that allows users to adjust the model's confidence threshold.
+
+This makes it possible to visually inspect how changing the confidence threshold affects the model's segmentation results without modifying the underlying model.
 
 ---
 
-# 8. Future Work
+## Database Logging
 
-## Expanded Job Cost Model
+The application uses **SQLAlchemy with SQLite** to log information about processed jobs.
 
-Expand the financial model to incorporate:
+The database records information such as:
 
-* Revenue
-* Cost of goods sold (COGS)
-* Labor/time cost
-* Advertising expenses
-* Profit margin
-* Customer acquisition cost (CAC)
+* Client details
+* Processed image paths
+* Processing activity
 
-## Opportunity Cost Calculator
-
-Compare the economics of:
-
-**Door-to-door sales vs. digital advertising**
-
-Potential inputs include:
-
-* Revenue
-* Profit margin
-* Hourly profit
-* Cost per lead
-* Lead-to-customer conversion rate
-* Advertising spend
-* Available working hours
-
-The goal is to determine when the value of the owner's time becomes high enough that spending money on customer acquisition becomes more profitable than manually generating leads.
-
-## Business Scaling Model
-
-Eventually model the business through several stages:
-
-**Lead Generation → Job Economics → Operational Efficiency → Capacity Expansion**
-
-The model could eventually help determine when additional equipment, employees, or additional rigs become economically justified.
-
----
-
-# 9. Limitations
-
-The current model has several limitations:
-
-* The dataset is primarily based on my own historical jobs.
-* Driveway capacity is estimated rather than precisely measured.
-* Job duration depends on factors beyond driveway size.
-* Surface condition can significantly affect cleaning time.
-* Equipment setup and operating conditions can affect duration.
-* Historical pricing may not represent optimal market pricing.
-* Expense estimates depend on historical consumption patterns.
-* Statistical intervals depend on the assumptions of the regression model.
-* A larger and more diverse dataset would improve generalizability.
-
-As additional jobs are collected, the model can be retrained with a larger and more representative dataset.
-
----
-
-# 10. Project Objective
-
-The long-term goal is to turn historical operational data into a **decision-support system for a service business**.
-
-The system is designed to answer:
-
-> **How long will this job take?**
-
-> **What should I charge?**
-
-> **What will it cost me?**
-
-> **How profitable is it?**
-
-> **Is accepting this job worth the opportunity cost?**
-
-This project combines **data science, statistical modeling, software engineering, and real-world business analytics** to solve a problem directly derived from operating a service business.
+This creates a persistent record of model usage rather than treating each inference as an isola
