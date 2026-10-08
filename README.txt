@@ -1,83 +1,101 @@
 # Surface Vision AI
 
-> **Computer Vision | Full-Stack AI Application | Python | YOLOv8 | FastAPI | React | SQLAlchemy**
+> **Computer Vision | YOLOv8 | FastAPI | React | SQLAlchemy | Python**
 
 ## Project Summary
 
-While working in the pressure-washing industry, I found that estimating and documenting the amount of cleanable surface at a job site could be time-consuming and subjective when done manually.
+While working in the pressure-washing industry, I wanted to reduce the subjectivity and time involved in identifying the amount of concrete surface in job-site photos.
 
-I wanted to build a computer vision application that could automatically identify concrete surfaces in job-site photos and provide a foundation for eventually estimating surface area and automating parts of the quoting process.
+Build a computer vision application that could identify concrete surfaces and provide a foundation for eventually estimating surface area and improving job quotes.
 
-I built a full-stack computer vision application using **YOLOv8 segmentation**, a **FastAPI backend**, a **React frontend**, and **SQLite/SQLAlchemy** for data logging.
+I integrated a **YOLOv8 segmentation model** into a full-stack application using **FastAPI, React, and SQLAlchemy**. Users can upload job-site images, adjust the model's confidence threshold, view segmentation results, and log processed jobs in a SQLite database.
 
-Users can upload job-site images, run them through the segmentation model, adjust the model's confidence threshold interactively, and view the processed output through the web interface.
+Built an end-to-end AI application that connects **image upload → model inference → database logging → visual results** through a web interface.
 
-I also implemented backend image processing, database logging, frontend/backend communication, and cache-busting logic to ensure users see the most recent processed image.
-
-The result is an end-to-end AI application that takes an image from upload through model inference, stores information about the processing event, and returns a visual segmentation result to the user.
-
-The application establishes the foundation for automatically estimating **concrete surface area**, which could eventually be used to improve pressure-washing quotes and job planning.
+The project provides the foundation for eventually converting segmentation masks into **estimated square footage** for automated job estimation.
 
 ---
 
-# 1. Project Overview
+## Key Features
 
-Surface Vision AI is a specialized computer vision application for the **pressure-washing and concrete-sealing industry**.
+* **YOLOv8 segmentation** — identifies concrete surfaces in uploaded images
+* **FastAPI backend** — handles image uploads, inference, and processed results
+* **React frontend** — provides image upload, results, and confidence-threshold controls
+* **SQLAlchemy + SQLite** — logs client and image-processing information
+* **Cache busting** — ensures newly processed images are displayed instead of cached results
 
-The application allows users to upload photographs of job sites and uses a **YOLOv8 segmentation model** to identify and isolate concrete surfaces.
+---
 
-The system combines machine learning with a web application so that the model can be used through an interactive interface rather than as an isolated Python script.
-
-### Core Workflow
+## Technical Architecture
 
 ```text
-User
+React
   ↓
-React Frontend
-  ↓
-Image Upload
-  ↓
-FastAPI Backend
+FastAPI
   ↓
 YOLOv8 Segmentation
   ↓
 Processed Image
   ↓
-Database Logging
+SQLite / SQLAlchemy
   ↓
-React Frontend
-  ↓
-Visual Result
+React
 ```
 
 ---
 
-# 2. Key Features
+## Tech Stack
 
-## Image Upload & Processing
-
-The FastAPI backend accepts multipart image uploads and stores the images locally for model inference.
-
-The backend then passes the image through the YOLOv8 segmentation model and returns the processed result.
-
----
-
-## Interactive Confidence Thresholding
-
-The React frontend provides a slider that allows users to adjust the model's confidence threshold.
-
-This makes it possible to visually inspect how changing the confidence threshold affects the model's segmentation results without modifying the underlying model.
+* Python
+* YOLOv8 / Ultralytics
+* FastAPI
+* React
+* SQLAlchemy
+* SQLite
 
 ---
 
-## Database Logging
+## Installation
 
-The application uses **SQLAlchemy with SQLite** to log information about processed jobs.
+### Backend
 
-The database records information such as:
+```bash
+pip install fastapi uvicorn ultralytics sqlalchemy
+uvicorn main:app --reload
+```
 
-* Client details
-* Processed image paths
-* Processing activity
+### Frontend
 
-This creates a persistent record of model usage rather than treating each inference as an isola
+```bash
+npm install
+npm start
+```
+
+---
+
+## Future Work
+
+* Convert segmentation masks into estimated square footage
+* Add reference-based scaling for physical area estimation
+* Move image storage to AWS S3
+* Add user authentication and multi-crew support
+* Migrate from SQLite to PostgreSQL for production use
+
+---
+
+## Limitations
+
+* Segmentation accuracy depends on training data and image quality.
+* Images currently lack a physical scale, so pixel area cannot directly determine square footage.
+* Local storage and SQLite are intended for the current prototype.
+* Authentication and production deployment have not yet been implemented.
+
+---
+
+## Project Goal
+
+Turn:
+
+**Job-Site Image → Concrete Segmentation → Square Footage → Job Estimate**
+
+This project combines **computer vision, machine learning, full-stack development, and a real-world business application**.
